@@ -61,7 +61,7 @@ export default function Login() {
       />
       <button type="submit" className="button">התחבר</button>
 
-      {/* קישור לעמוד הרשמה */}
+      
       <p style={{ marginTop: '10px', textAlign: 'center' }}>
         אין לך חשבון?{' '}
         <Link to="/register" style={{ color: '#4CAF50', textDecoration: 'none' }}>
