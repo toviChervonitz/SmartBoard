@@ -1,5 +1,6 @@
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import type { PostCardProps } from "../models/Post";
+import LikeButton from './LikeButton';
 
 export default function PostCard({ post, isLoggedIn }: PostCardProps) {
   return (
@@ -11,7 +12,7 @@ export default function PostCard({ post, isLoggedIn }: PostCardProps) {
 
         {isLoggedIn ? (
           <Typography variant="body2" color="text.secondary">
-            📞 {post.contactInfo?.phone || "לא צויין"}  
+            📞 {post.contactInfo?.phone || "לא צויין"}
             <br />
             ✉️ {post.contactInfo?.email || "לא צויין"}
           </Typography>
@@ -21,9 +22,7 @@ export default function PostCard({ post, isLoggedIn }: PostCardProps) {
           </Button>
         )}
 
-        <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-          ❤️ {post.likes || 0} לייקים
-        </Typography>
+        <LikeButton></LikeButton>
       </CardContent>
     </Card>
   );
