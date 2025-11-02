@@ -3,6 +3,7 @@ export interface Post {
   title: string;
   content: string;
   location: string;
+  
   contactInfo?: {
     phone?: string;
     email?: string;
