@@ -78,7 +78,11 @@ export default function PublicPosts() {
         כל המודעות
       </Typography>
       {posts.map((p) => (
+<<<<<<< HEAD
         <PostCard key={p._id} post={p} isLoggedIn={true} />
+=======
+        <PostCard key={p._id} post={p} isLoggedIn={false} fromPersonalArea={false} />
+>>>>>>> 6f5732ae7854cc2c3086070e3ef664f59369546c
       ))}
     </Container>
   );
