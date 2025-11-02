@@ -67,7 +67,7 @@ export default function PublicPosts() {
     setTimeout(() => {
       setPosts(mockData);
       setLoading(false);
-    }, 1000); // רק כדי לדמות טעינה
+    }, 1000);
   }, []);
 
   if (loading) return <CircularProgress />;

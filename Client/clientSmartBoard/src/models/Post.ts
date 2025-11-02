@@ -4,6 +4,7 @@ export interface Post {
   content: string;
   location: string;
   category: string;
+  userId: string;
   contactInfo?: {
     phone?: string;
     email?: string;

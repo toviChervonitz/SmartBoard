@@ -5,6 +5,7 @@ const postSchema = new mongoose.Schema({
     content: { type: String, required: true },
     location: { type: String },
     category: { type: String },
+    userId: { type: String, required: true },
     contactInfo: {
         phone: { type: String },
         email: { type: String },

@@ -1,8 +1,11 @@
 import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
 import type { PostCardProps } from "../models/Post";
 import { deletePost } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete }: PostCardProps) {
+
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     if (window.confirm("האם את בטוחה שברצונך למחוק את המודעה?")) {
@@ -16,9 +19,6 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
       }
     }
   };
-  const handleUpdate = () => {
-    window.location.href = `/update-post/${post._id}`;
-  }
 
   return (
     <Card sx={{ mb: 2, p: 2 }}>
@@ -41,7 +41,8 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
 
         {fromPersonalArea && (
           <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-            <Button variant="outlined" color="primary" onClick={handleUpdate}>
+            <Button variant="outlined" color="primary"
+              onClick={() => navigate("/post/edit", { state: { post } })}>
               ערוך
             </Button>
             <Button variant="outlined" color="error" onClick={handleDelete}>
