@@ -3,6 +3,8 @@ export interface Post {
   title: string;
   content: string;
   location: string;
+  category: string;
+  userId: string;
   contactInfo?: {
     phone?: string;
     email?: string;
@@ -13,4 +15,6 @@ export interface Post {
 export interface PostCardProps {
   post: Post;
   isLoggedIn?: boolean;
+  fromPersonalArea?: boolean;
+  onDelete?: (id: string) => void;
 }

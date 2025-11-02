@@ -67,7 +67,7 @@ export default function PublicPosts() {
     setTimeout(() => {
       setPosts(mockData);
       setLoading(false);
-    }, 1000); // רק כדי לדמות טעינה
+    }, 1000);
   }, []);
 
   if (loading) return <CircularProgress />;
@@ -78,7 +78,7 @@ export default function PublicPosts() {
         כל המודעות
       </Typography>
       {posts.map((p) => (
-        <PostCard key={p._id} post={p} isLoggedIn={false} />
+        <PostCard key={p._id} post={p} isLoggedIn={false} fromPersonalArea={false} />
       ))}
     </Container>
   );

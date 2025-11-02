@@ -1,56 +1,64 @@
 import { useEffect, useState } from "react";
 import { Container, Typography, CircularProgress } from "@mui/material";
 import PostCard from "../components/PostCard";
+import { getPostById } from "../services/api";
+import type { Post } from "../models/Post";
+import { getFromLocalStorage } from '../services/localstorage'
 
 export default function PublicPosts() {
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const user = getFromLocalStorage<string>('userLogin');
+    const userId = user ? JSON.parse(user)._id : null;
+
+    const handleDelete = (id: string) => {
+        setPosts((prev) => prev.filter((p) => p._id !== id)); // ✅ מסיר מהמסך בלי רענון
+    };
 
     useEffect(() => {
-        // כאן במקום בקשת axios נשתמש בנתונים מדומים
-        const mockData = [
-            {
-                _id: "1",
-                title: "דירה להשכרה בתל אביב",
-                content: "3 חדרים מרוהטים, קומה 2, קרוב לים",
-                location: "תל אביב",
-                contactInfo: { phone: "050-1234567", email: "example1@gmail.com" },
-                likes: 5,
-            },
-            {
-                _id: "2",
-                title: "מכירת מחשב נייד",
-                content: "Dell XPS במצב מצוין, מחיר גמיש",
-                location: "ירושלים",
-                contactInfo: { phone: "052-7654321", email: "example2@gmail.com" },
-                likes: 3,
-            },
-            {
-                _id: "3",
-                title: "מחפשת שותפה לדירה",
-                content: "דירה מקסימה במרכז חיפה, כניסה מיידית",
-                location: "חיפה",
-                contactInfo: { phone: "053-9876543", email: "example3@gmail.com" },
-                likes: 10,
-            },
-        ];
+        const fetchPosts = async () => {
+            try {
+                const data = await getPostById(userId);
+                setPosts(data);
+            } catch (err) {
+                console.error("❌ שגיאה בקבלת פוסטים:", err);
+                setError("לא ניתן לטעון את המודעות מהשרת.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        setTimeout(() => {
-            setPosts(mockData);
-            setLoading(false);
-        }, 1000);
+        fetchPosts();
     }, []);
 
-    if (loading) return <CircularProgress />;
+    if (loading)
+        return (
+            <Container sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+            </Container>
+        );
+
+    if (error)
+        return (
+            <Container sx={{ mt: 4 }}>
+                <Typography color="error" variant="body1">
+                    {error}
+                </Typography>
+            </Container>
+        );
 
     return (
         <Container sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>
                 המודעות שלי
             </Typography>
-            {posts.map((p) => (
-                <PostCard key={p._id} post={p} isLoggedIn={true} />
-            ))}
-        </Container>
+            {posts.length > 0 ? (
+                posts.map((p) => <PostCard key={p._id} post={p} isLoggedIn={true} fromPersonalArea={true} onDelete={handleDelete} />)
+            ) : (
+                <Typography color="text.secondary">אין לך כרגע מודעות באזור האישי</Typography>
+            )
+            }
+        </Container >
     );
 }
