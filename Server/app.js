@@ -19,8 +19,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 
-// Connect to Mongo
-await connectMongo(); // עכשיו MONGO_URL כבר מוגדר
+app.use('/api/posts', postsRouter);
 
 // Start server
 app.listen(PORT, HOST_NAME, () => {

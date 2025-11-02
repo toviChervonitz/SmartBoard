@@ -6,12 +6,20 @@ import Register from './components/Register.tsx';
 // import ProtectedRoute from './ProtectedRoute';
 
 const App: React.FC = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        {/*
+  import { useState } from 'react'
+  import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+  import './App.css'
+  import PublicPosts from './pages/PublicPosts';
+
+  function App() {
+
+    return (
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<PublicPosts />} />
+          {/*
         <Route
           path="/dashboard"
           element={
@@ -21,9 +29,9 @@ const App: React.FC = () => {
           }
         />
         */}
-      </Routes>
-    </Router>
-  );
-};
+        </Routes>
+      </Router>
+    )
+  }
 
-export default App;
+  export default App;
