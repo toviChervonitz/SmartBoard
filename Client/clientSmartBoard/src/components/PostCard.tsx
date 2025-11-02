@@ -1,21 +1,5 @@
 import { Card, CardContent, Typography, Button } from "@mui/material";
-
-interface Post {
-  _id: string;
-  title: string;
-  content: string;
-  location: string;
-  contactInfo?: {
-    phone?: string;
-    email?: string;
-  };
-  likes?: number;
-}
-
-interface PostCardProps {
-  post: Post;
-  isLoggedIn?: boolean;
-}
+import type { PostCardProps } from "../models/Post";
 
 export default function PostCard({ post, isLoggedIn }: PostCardProps) {
   return (
