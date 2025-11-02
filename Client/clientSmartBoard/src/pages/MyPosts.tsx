@@ -5,25 +5,38 @@ import { getPostById } from "../services/api";
 import type { Post } from "../models/Post";
 import { getFromLocalStorage } from '../services/localstorage'
 
-export default function PublicPosts() {
+export default function MyPosts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const user = getFromLocalStorage<string>('userLogin');
-    const userId = user ? JSON.parse(user)._id : null;
+    const user = getFromLocalStorage<any>('userLogin');
+    console.log("user:", user);
+    const userId = user?.id || null;
+    console.log(userId + "userId");
+
 
     const handleDelete = (id: string) => {
         setPosts((prev) => prev.filter((p) => p._id !== id)); // ✅ מסיר מהמסך בלי רענון
     };
 
     useEffect(() => {
+        if (!userId) {
+            setError("משתמש לא מזוהה. אנא התחבר מחדש.");
+            setLoading(false);
+            return;
+        }
         const fetchPosts = async () => {
             try {
                 const data = await getPostById(userId);
+                console.log("data" + data);
                 setPosts(data);
-            } catch (err) {
+            } catch (err:any) {
                 console.error("❌ שגיאה בקבלת פוסטים:", err);
-                setError("לא ניתן לטעון את המודעות מהשרת.");
+                if (err.response && err.response.status === 404) {
+                    setPosts([]);
+                } else {
+                    setError("לא ניתן לטעון את המודעות מהשרת.");
+                }
             } finally {
                 setLoading(false);
             }
