@@ -4,7 +4,6 @@ import './App.css'
 import PublicPosts from './pages/PublicPosts';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
      <Router>
