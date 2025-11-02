@@ -1,8 +1,20 @@
 export interface Post {
-  id: string;              
-  userId: string;         
-  title: string;           
-  content: string;         
-  location: string;        
-  contact: string;         
+  _id: string;
+  title: string;
+  content: string;
+  location: string;
+  category: string;
+  userId: string;
+  contactInfo?: {
+    phone?: string;
+    email?: string;
+  };
+  likes?: number;
+}
+
+export interface PostCardProps {
+  post: Post;
+  isLoggedIn?: boolean;
+  fromPersonalArea?: boolean;
+  onDelete?: (id: string) => void;
 }
