@@ -22,7 +22,7 @@ export default function PostCard({ post, isLoggedIn }: PostCardProps) {
           </Button>
         )}
 
-        <LikeButton></LikeButton>
+        <LikeButton post={post}></LikeButton>
       </CardContent>
     </Card>
   );

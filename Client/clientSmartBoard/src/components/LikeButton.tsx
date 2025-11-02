@@ -2,68 +2,75 @@ import React, { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
-type Post = {
-    id?: string | number;
-    likes?: number;
-    liked?: boolean;
-};
+import type { Post } from "../models/Post";
 
 interface LikeButtonProps {
-    post?: Post;
+    post: Post;
 }
 
-export default function LikeButton({ post = {} }: LikeButtonProps) {
-    const initialLikes = typeof post.likes === "number" ? post.likes : 0;
-    const [liked, setLiked] = useState(post.liked || false);
-    const [likes, setLikes] = useState(initialLikes);
+export default function LikeButton({ post }: LikeButtonProps) {
+    // מוסיפים liked פנימי אם לא קיים
+    const [currentPost, setCurrentPost] = useState<Post & { liked?: boolean }>({
+        ...post,
+        liked: false,
+    });
+
     const [loading, setLoading] = useState(false);
 
     const handleClick = async () => {
         if (loading) return;
+        if (!currentPost._id) {
+            console.error("Post ID is missing!");
+            return;
+        }
 
-        const newLiked = !liked;
-        const diff = newLiked ? 1 : -1;
+        const oldPost = currentPost;
 
-        // optimistic update
-        setLiked(newLiked);
-        setLikes((l) => l + diff);
+        const updatedPost = {
+            ...currentPost,
+            liked: !currentPost.liked, // הפוך את הלייק
+            likes: (currentPost.likes ?? 0) + (currentPost.liked ? -1 : 1), // עדכון הלייקים לפי מצב הלייק הקודם
+        };
+
+        // עדכון מיידי במסך
+        setCurrentPost(updatedPost);
         setLoading(true);
 
         try {
-            // 🔹 קריאה פיקטיבית ל־API (שנה לכתובת שלך)
-            const response = await fetch(`http://localhost:3000/like/${post.id}`, {
-                method: newLiked ? "POST" : "DELETE",
+            const response = await fetch(`http://localhost:3000/api/posts/${currentPost._id}`, {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedPost),
             });
 
-            if (!response.ok) throw new Error("API request failed");
+            if (!response.ok) throw new Error("Failed to update post");
 
-            // אופציונלי: לעדכן לפי תשובת השרת
-            const data = await response.json();
-            if (typeof data.likes === "number") setLikes(data.likes);
+            // אפשר להחזיר מהשרת ולעדכן state לפי data
+            // const data = await response.json();
+            // setCurrentPost(data);
+
         } catch (err) {
-            console.error("onLike failed:", err);
-            // rollback on error
-            setLiked(!newLiked);
-            setLikes((l) => l - diff);
+            console.error("Post update failed:", err);
+            // rollback במקרה של שגיאה
+            setCurrentPost(oldPost);
         } finally {
             setLoading(false);
         }
     };
+
     return (
         <div style={{ display: "flex", flexDirection: "column-reverse", alignItems: "center", gap: 8 }}>
             <IconButton
-                aria-label={liked ? "הסר לייק" : "הוסף לייק"}
+                aria-label={currentPost.liked ? "הסר לייק" : "הוסף לייק"}
                 onClick={handleClick}
                 disabled={loading}
                 size="small"
             >
-                <FavoriteIcon fontSize="small" color={liked ? "error" : "inherit"} />
+                <FavoriteIcon fontSize="small" color={currentPost.liked ? "error" : "inherit"} />
             </IconButton>
 
             <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                {likes} לייקים
+                {currentPost.likes || 0} לייקים
             </Typography>
         </div>
     );
