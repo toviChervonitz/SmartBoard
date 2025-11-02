@@ -1,7 +1,25 @@
-import { Card, CardContent, Typography, Button } from "@mui/material";
+import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
 import type { PostCardProps } from "../models/Post";
+import { deletePost } from "../services/api";
 
-export default function PostCard({ post, isLoggedIn }: PostCardProps) {
+export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete }: PostCardProps) {
+
+  const handleDelete = async () => {
+    if (window.confirm("האם את בטוחה שברצונך למחוק את המודעה?")) {
+      try {
+        await deletePost(post._id);
+        alert("✅ המודעה נמחקה בהצלחה");
+        onDelete?.(post._id);
+      } catch (err) {
+        console.error("❌ שגיאה במחיקת פוסט:", err);
+        alert("שגיאה במחיקה. נסי שוב מאוחר יותר.");
+      }
+    }
+  };
+  const handleUpdate = () => {
+    window.location.href = `/update-post/${post._id}`;
+  }
+
   return (
     <Card sx={{ mb: 2, p: 2 }}>
       <CardContent>
@@ -11,7 +29,7 @@ export default function PostCard({ post, isLoggedIn }: PostCardProps) {
 
         {isLoggedIn ? (
           <Typography variant="body2" color="text.secondary">
-            📞 {post.contactInfo?.phone || "לא צויין"}  
+            📞 {post.contactInfo?.phone || "לא צויין"}
             <br />
             ✉️ {post.contactInfo?.email || "לא צויין"}
           </Typography>
@@ -19,6 +37,17 @@ export default function PostCard({ post, isLoggedIn }: PostCardProps) {
           <Button variant="contained" href="/login">
             התחבר כדי ליצור קשר
           </Button>
+        )}
+
+        {fromPersonalArea && (
+          <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
+            <Button variant="outlined" color="primary" onClick={handleUpdate}>
+              ערוך
+            </Button>
+            <Button variant="outlined" color="error" onClick={handleDelete}>
+              מחק
+            </Button>
+          </Stack>
         )}
 
         <Typography variant="caption" display="block" sx={{ mt: 1 }}>
