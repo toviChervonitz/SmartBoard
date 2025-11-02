@@ -10,6 +10,8 @@ const app = express({ mergeParams: true });
 app.use(express.json());
 
 
+const postsRouter = require('./routes/posts');
+app.use('/api/posts', postsRouter);
 
 require("./db/mongoConnection");
 
