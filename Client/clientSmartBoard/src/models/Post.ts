@@ -1,4 +1,4 @@
-interface Post {
+export interface Post {
   _id: string;
   title: string;
   content: string;
@@ -10,7 +10,7 @@ interface Post {
   likes?: number;
 }
 
-interface PostCardProps {
+export interface PostCardProps {
   post: Post;
   isLoggedIn?: boolean;
 }
