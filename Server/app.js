@@ -6,6 +6,7 @@ import express from 'express';
 import { connectMongo } from './db/mongoConnection.js';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
+import postsRouter from './routes/postRoutes.js';
 
 const PORT = process.env.PORT || 3000;
 const HOST_NAME = process.env.HOST_NAME || '127.0.0.1';
