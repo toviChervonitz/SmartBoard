@@ -13,6 +13,8 @@ import type { Post } from "../models/Post";
 export default function PublicPosts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+    //trybvfjh
+    const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -29,6 +31,7 @@ export default function PublicPosts() {
             })
             .finally(() => setLoading(false));
     }, []);
+    //trybvfjh
 
     useEffect(() => {
         const filtered = posts.filter(post =>
@@ -74,6 +77,8 @@ export default function PublicPosts() {
             </Container>
         );
     }
+    const isLoggedIn = user ? true : false;
+    //trybvfjh
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4 }}>
