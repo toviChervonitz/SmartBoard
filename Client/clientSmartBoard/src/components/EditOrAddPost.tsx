@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     Container,
@@ -15,10 +15,20 @@ export default function EditOrAddPost() {
     const location = useLocation();
     const { post } = (location.state || {}) as { post?: Post };
     const user = localStorage.getItem('userLogin');
-    const id = user ? JSON.parse(user)._id : '';
+    const id = user ? JSON.parse(user).id : '';
+    console.log(user + "user");
+    console.log(id + "id");
+
+
 
     // אם יש פוסט -> מצב עריכה, אחרת -> הוספה חדשה
     const isEditing = Boolean(post);
+
+    useEffect(() => {
+        if (id) {
+            setFormData((prev) => ({ ...prev, userId: id }));
+        }
+    }, [id]);
 
     const [formData, setFormData] = useState<Post>(
         post || {
@@ -32,6 +42,7 @@ export default function EditOrAddPost() {
             userId: id
         }
     );
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -52,10 +63,12 @@ export default function EditOrAddPost() {
                 await updatePost(formData._id, formData);
                 alert("✅ הפוסט עודכן בהצלחה!");
             } else {
-                await createPost(formData);
+                const dataToSend = { ...formData };
+                Reflect.deleteProperty(dataToSend, "_id");
+                await createPost(dataToSend);
                 alert("✅ הפוסט נוסף בהצלחה!");
             }
-            navigate("/myPosts");
+            navigate("/myPost");
         } catch (err) {
             console.error("❌ שגיאה:", err);
             alert("אירעה שגיאה במהלך השמירה.");
