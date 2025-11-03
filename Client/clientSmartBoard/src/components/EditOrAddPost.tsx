@@ -5,19 +5,43 @@ import {
     Typography,
     TextField,
     Button,
-    Stack,
+    Paper,
+    Box,
+    Alert,
+    Snackbar,
+    Grid as MuiGrid,
+    InputAdornment,
+    IconButton,
 } from "@mui/material";
+import {
+    Phone as PhoneIcon,
+    Email as EmailIcon,
+    LocationOn as LocationIcon,
+    Save as SaveIcon,
+    ArrowBack as ArrowBackIcon
+} from '@mui/icons-material';
 import { updatePost, createPost } from "../services/api";
 import type { Post } from "../models/Post";
+import { getFromLocalStorage } from "../services/localstorage";
+
+interface User {
+    _id: string;
+    name: string;
+}
 
 export default function EditOrAddPost() {
     const navigate = useNavigate();
     const location = useLocation();
     const { post } = (location.state || {}) as { post?: Post };
-    const user = localStorage.getItem('userLogin');
-    const id = user ? JSON.parse(user)._id : '';
+    const user = getFromLocalStorage<User>('userLogin');
+    const id = user?._id || '';
 
-    // אם יש פוסט -> מצב עריכה, אחרת -> הוספה חדשה
+    const [snackbar, setSnackbar] = useState<{open: boolean, message: string, severity: 'success' | 'error'}>({
+        open: false,
+        message: '',
+        severity: 'success'
+    });
+
     const isEditing = Boolean(post);
 
     const [formData, setFormData] = useState<Post>(
@@ -50,71 +74,171 @@ export default function EditOrAddPost() {
         try {
             if (isEditing) {
                 await updatePost(formData._id, formData);
-                alert("✅ הפוסט עודכן בהצלחה!");
+                setSnackbar({
+                    open: true,
+                    message: "✅ המודעה עודכנה בהצלחה!",
+                    severity: 'success'
+                });
             } else {
                 await createPost(formData);
-                alert("✅ הפוסט נוסף בהצלחה!");
+                setSnackbar({
+                    open: true,
+                    message: "✅ המודעה נוספה בהצלחה!",
+                    severity: 'success'
+                });
             }
-            navigate("/my-posts");
+            setTimeout(() => navigate("/my-posts"), 1500);
         } catch (err) {
             console.error("❌ שגיאה:", err);
-            alert("אירעה שגיאה במהלך השמירה.");
+            setSnackbar({
+                open: true,
+                message: "אירעה שגיאה במהלך השמירה. נסה שוב.",
+                severity: 'error'
+            });
         }
     };
 
     return (
-        <Container sx={{ mt: 4, maxWidth: "600px" }}>
-            <Typography variant="h4" gutterBottom>
-                {isEditing ? "עדכון מודעה" : "הוספת מודעה חדשה"}
-            </Typography>
+        <Container maxWidth="md" sx={{ mt: 4, mb: 8 }}>
+            <Paper elevation={0} sx={{ p: { xs: 2, md: 4 } }}>
+                <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <IconButton
+                        onClick={() => navigate(-1)}
+                        sx={{ color: 'text.secondary' }}
+                    >
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h4" component="h1">
+                        {isEditing ? "עריכת מודעה" : "יצירת מודעה חדשה"}
+                    </Typography>
+                </Box>
 
-            <form onSubmit={handleSubmit}>
-                <Stack spacing={2}>
-                    <TextField
-                        label="כותרת"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="תוכן"
-                        name="content"
-                        value={formData.content}
-                        onChange={handleChange}
-                        fullWidth
-                        multiline
-                        rows={3}
-                        required
-                    />
-                    <TextField
-                        label="מיקום"
-                        name="location"
-                        value={formData.location}
-                        onChange={handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        label="טלפון"
-                        name="phone"
-                        value={formData.contactInfo?.phone || ""}
-                        onChange={handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        label="אימייל"
-                        name="email"
-                        value={formData.contactInfo?.email || ""}
-                        onChange={handleChange}
-                        fullWidth
-                    />
+                <form onSubmit={handleSubmit}>
+                    <MuiGrid container spacing={3}>
+                        <MuiGrid item xs={12}>
+                            <TextField
+                                label="כותרת"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                variant="outlined"
+                                InputProps={{
+                                    sx: { fontSize: '1.1rem' }
+                                }}
+                            />
+                        </Grid>
 
-                    <Button type="submit" variant="contained" color="primary">
-                        {isEditing ? "שמור שינויים" : "פרסם מודעה"}
-                    </Button>
-                </Stack>
-            </form>
+                        <MuiGrid item xs={12}>
+                            <TextField
+                                label="תוכן המודעה"
+                                name="content"
+                                value={formData.content}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                multiline
+                                rows={4}
+                                variant="outlined"
+                                helperText="תאר את המודעה בצורה ברורה ומפורטת"
+                            />
+                        </MuiGrid>
+
+                        <MuiGrid item xs={12}>
+                            <TextField
+                                label="מיקום"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleChange}
+                                fullWidth
+                                variant="outlined"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LocationIcon color="action" />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </MuiGrid>
+
+                        <MuiGrid item xs={12} sm={6}>
+                            <TextField
+                                label="טלפון"
+                                name="phone"
+                                value={formData.contactInfo?.phone || ""}
+                                onChange={handleChange}
+                                fullWidth
+                                variant="outlined"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <PhoneIcon color="action" />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </MuiGrid>
+
+                        <MuiGrid item xs={12} sm={6}>
+                            <TextField
+                                label="אימייל"
+                                name="email"
+                                type="email"
+                                value={formData.contactInfo?.email || ""}
+                                onChange={handleChange}
+                                fullWidth
+                                variant="outlined"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <EmailIcon color="action" />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </MuiGrid>
+
+                        <MuiGrid item xs={12}>
+                            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                    startIcon={<SaveIcon />}
+                                    sx={{ flex: { xs: 1, sm: 'none' } }}
+                                >
+                                    {isEditing ? "שמור שינויים" : "פרסם מודעה"}
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => navigate(-1)}
+                                    sx={{ flex: { xs: 1, sm: 'none' } }}
+                                >
+                                    ביטול
+                                </Button>
+                            </Box>
+                        </MuiGrid>
+                    </MuiGrid>
+                </form>
+            </Paper>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
+                onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+            >
+                <Alert
+                    onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+                    severity={snackbar.severity}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }
