@@ -39,7 +39,7 @@ export default function Register() {
       localStorage.setItem('userLogin', JSON.stringify(loginRes.data.user));
 
       alert(`נרשמת בהצלחה! ברוך הבא ${loginRes.data.user.name}`);
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     } catch (error) {
       console.error(error);
       alert('שגיאה בהרשמה. ייתכן שהאימייל כבר רשום.');

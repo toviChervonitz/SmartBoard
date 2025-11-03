@@ -30,7 +30,7 @@ export default function Login() {
       localStorage.setItem('userLogin', JSON.stringify(data.user));
 
       alert(`ברוך הבא ${data.user.name}`);
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     } catch (error) {
       console.error(error);
       alert('שגיאה בהתחברות');
