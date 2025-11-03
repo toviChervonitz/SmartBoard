@@ -30,7 +30,7 @@ export default function Login() {
       localStorage.setItem('userLogin', JSON.stringify(data.user));
 
       alert(`ברוך הבא ${data.user.name}`);
-      window.location.href = '/';
+      window.location.href = '/publicPosts';
     } catch (error) {
       console.error(error);
       alert('שגיאה בהתחברות');
