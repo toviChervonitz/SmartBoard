@@ -1,9 +1,11 @@
 // app.js
+const dotenv = require('dotenv');
+dotenv.config(); // חייב להיות ראשון
+const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const postsRouter = require('./routes/postRoutes');
-const authRoutes = require('./routes/authRoutes');
 
 const HOST_NAME = process.env.HOST_NAME || '127.0.0.1';
 const PORT = process.env.PORT || 3000;
