@@ -9,19 +9,21 @@ import authRoutes from './routes/authRoutes.js';
 
 const PORT = process.env.PORT || 3000;
 const HOST_NAME = process.env.HOST_NAME || '127.0.0.1';
-
+const PORT = process.env.PORT || 3000;
 const app = express({ mergeParams: true });
 
-// Middleware
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors());
+
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', authRoutes);
 
 app.use('/api/posts', postsRouter);
+app.use('/api/auth', authRoutes);
 
-// Start server
+const { connectMongo } = require('./db/mongoConnection');
+
+connectMongo();
+
 app.listen(PORT, HOST_NAME, () => {
-    console.log(`Server is up and running on http://${HOST_NAME}:${PORT}`);
+  console.log('Server is up and running');
 });
