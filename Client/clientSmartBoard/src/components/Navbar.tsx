@@ -6,11 +6,9 @@ import { getFromLocalStorage } from "../services/localstorage";
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // נניח שבדיקה מתבצעת לפי טוקן בלוקל סטורג'
   useEffect(() => {
     const user = getFromLocalStorage<string>('userLogin');
     setIsLoggedIn(!!user);
-    // setIsLoggedIn(true)
   }, []);
 
   return (
