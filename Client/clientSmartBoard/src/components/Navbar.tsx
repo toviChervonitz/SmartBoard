@@ -30,6 +30,9 @@ export default function Navbar() {
               <Button color="inherit" component={Link} to="/my-posts">
                 ההודעות שלי
               </Button>
+              <Button color="inherit" component={Link} to="/my-favorites">
+                מודעות שאהבתי
+              </Button>
               <Button color="inherit" component={Link} to="/add-post">
                 הוספת מודעה
               </Button>
@@ -43,7 +46,7 @@ export default function Navbar() {
             <Button
               color="inherit"
               onClick={() => {
-                localStorage.removeItem("token");
+                localStorage.clear();
                 window.location.reload();
               }}
             >
