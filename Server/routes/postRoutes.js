@@ -10,6 +10,8 @@ router.post("/addFavoritePost/:id", postController.addFavoritePost);
 router.post("/removeFavoritePost/:id", postController.removeFavoritePost);
 router.delete("/:id", postController.deletePost);
 router.put("/:id", postController.updatePost);
+router.get("/user/:userId", postController.getPostsByUser);
+
 
 
 module.exports = router;

@@ -1,18 +1,30 @@
 import { AppBar, Toolbar, Button, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getFromLocalStorage } from "../services/localstorage";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const user = getFromLocalStorage<string>('userLogin');
-    setIsLoggedIn(!!user);
+    const token = localStorage.getItem("token");
+    const user = getFromLocalStorage<string>("userLogin");
+    setIsLoggedIn(!!token && !!user);
   }, []);
 
+  const handleLogout = () => {
+    // ניקוי מלא של ה־localStorage
+    localStorage.clear();
+    // localStorage.removeItem("userLogin");
+    setIsLoggedIn(false);
+
+    // מעבר אוטומטי לעמוד הראשי
+    navigate("/", { replace: true });
+  };
+
   return (
-    <AppBar position="fixed" color="primary" sx={{ width: '100%' }}>
+    <AppBar position="fixed" color="primary" sx={{ width: "100%" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         {/* כותרת האתר */}
         <Typography variant="h6" component="div">
@@ -34,13 +46,17 @@ export default function Navbar() {
                 מודעות שאהבתי
               </Button>
               <Button color="inherit" component={Link} to="/add-post">
+              <Button color="inherit" component={Link} to="/myPost">
+                ההודעות שלי
+              </Button>
+              <Button color="inherit" component={Link} to="/addPost">
                 הוספת מודעה
               </Button>
             </>
           )}
         </div>
 
-        {/* התחברות/התנתקות */}
+        {/* התחברות / התנתקות */}
         <div>
           {isLoggedIn ? (
             <Button
@@ -50,6 +66,7 @@ export default function Navbar() {
                 window.location.reload();
               }}
             >
+            <Button color="inherit" onClick={handleLogout}>
               התנתקות
             </Button>
           ) : (
@@ -60,6 +77,5 @@ export default function Navbar() {
         </div>
       </Toolbar>
     </AppBar>
-
   );
 }
