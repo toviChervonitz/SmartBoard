@@ -18,3 +18,15 @@ export interface PostCardProps {
   fromPersonalArea?: boolean;
   onDelete?: (id: string) => void;
 }
+
+export interface User {
+  userId: string;
+  favoritesIds?: string[];
+}
+
+export interface favoritePost {
+  postId: string;
+  userId: string;
+  liked?: boolean;
+  likes?: number;
+}
