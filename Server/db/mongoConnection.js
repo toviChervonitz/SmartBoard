@@ -1,11 +1,13 @@
-const mongoose = require('mongoose');
-main().catch(err => console.log("Mongo error:", err));
+import mongoose from 'mongoose';
 
-async function main() {
+export async function connectMongo() {
   try {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("Mongo connected successfully");
   } catch (err) {
-    console.error(" Mongo connection failed:", err.message);
+    console.error("Mongo connection failed:", err.message);
   }
 }

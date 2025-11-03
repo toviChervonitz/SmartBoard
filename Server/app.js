@@ -1,23 +1,27 @@
-const express = require('express');
-require('dotenv').config();
-const cors = require('cors');
-const postsRouter = require('./routes/postRoutes');
+// app.js
+import dotenv from 'dotenv';
+dotenv.config(); // חייב להיות ראשון
 
-const HOST_NAME = process.env.HOST_NAME || '127.0.0.1';
+import express from 'express';
+import { connectMongo } from './db/mongoConnection.js';
+import cors from 'cors';
+import authRoutes from './routes/authRoutes.js';
+
 const PORT = process.env.PORT || 3000;
+const HOST_NAME = process.env.HOST_NAME || '127.0.0.1';
+
 const app = express({ mergeParams: true });
 
-app.use(cors());
-
+// Middleware
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 
+// Routes
+app.use('/api/auth', authRoutes);
 
 app.use('/api/posts', postsRouter);
 
-require("./db/mongoConnection");
-
-
+// Start server
 app.listen(PORT, HOST_NAME, () => {
-    console.log('server is up and running');
-
-})
+    console.log(`Server is up and running on http://${HOST_NAME}:${PORT}`);
+});
