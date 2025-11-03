@@ -43,7 +43,7 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
         {fromPersonalArea && (
           <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
             <Button variant="outlined" color="primary"
-              onClick={() => navigate("/post/edit", { state: { post } })}>
+              onClick={() => navigate("/addPost", { state: { post } })}>
               ערוך
             </Button>
             <Button variant="outlined" color="error" onClick={handleDelete}>

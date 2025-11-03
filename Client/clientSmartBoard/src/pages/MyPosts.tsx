@@ -3,6 +3,7 @@ import { Container, Typography, CircularProgress } from "@mui/material";
 import PostCard from "../components/PostCard";
 import { getPostById } from "../services/api";
 import type { Post } from "../models/Post";
+import { getPostsByUser } from "../services/api";
 import { getFromLocalStorage } from '../services/localstorage'
 
 export default function MyPosts() {
@@ -27,10 +28,10 @@ export default function MyPosts() {
         }
         const fetchPosts = async () => {
             try {
-                const data = await getPostById(userId);
+                const data = await getPostsByUser(userId);
                 console.log("data" + data);
                 setPosts(data);
-            } catch (err:any) {
+            } catch (err: any) {
                 console.error("❌ שגיאה בקבלת פוסטים:", err);
                 if (err.response && err.response.status === 404) {
                     setPosts([]);
