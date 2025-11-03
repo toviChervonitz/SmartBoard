@@ -64,7 +64,7 @@ export default function Register() {
       });
 
       localStorage.setItem('token', loginRes.data.token);
-      localStorage.setItem('user', JSON.stringify(loginRes.data.user));
+      localStorage.setItem('userLogin', JSON.stringify(loginRes.data.user));
 
       navigate('/');
     } catch (error: any) {

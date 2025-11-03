@@ -1,13 +1,33 @@
 const Post = require("../models/Post");
 
+// פונקציה שמבריחה תווי RegExp מסוכנים מהחיפוש (כדי למנוע תקלות/הזרקה)
+function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find();
-        res.json(posts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const { q } = req.query;
+
+        let filter = {};
+        if (q && q.trim()) {
+            const regex = new RegExp(escapeRegex(q.trim()), 'i'); // case-insensitive
+            filter = {
+                $or: [
+                    { title: { $regex: regex } },
+                    { location: { $regex: regex } },
+                ]
+            };
+        }
+
+        const posts = await Post.find(filter).sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
+
+
 
 exports.getPostById = async (req, res) => {
     try {

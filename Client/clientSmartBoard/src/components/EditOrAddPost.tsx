@@ -87,7 +87,7 @@ export default function EditOrAddPost() {
                     severity: 'success'
                 });
             }
-            setTimeout(() => navigate("/my-posts"), 1500);
+            navigate("/myPosts");
         } catch (err) {
             console.error("❌ שגיאה:", err);
             setSnackbar({

@@ -53,7 +53,7 @@ export default function Login() {
       );
 
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('userLogin', JSON.stringify(data.user));
 
       // במקום alert נשתמש בניווט
       navigate('/');
