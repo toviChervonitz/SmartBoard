@@ -20,9 +20,23 @@ export function getUserFromToken(): DecodedToken | null {
   }
 }
 
-// פונקציה שבודקת אם המשתמש מחובר
-export function isLoggedIn(): boolean {
-  const decoded = getUserFromToken();
-  if (!decoded) return false;
-  return decoded.exp * 1000 > Date.now(); // עדיין בתוקף
+// src/services/auth.ts
+export function logout() {
+  try {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userLogin");
+  } finally {
+    // ניתוב אחרי מחיקה (בחרי לאן)
+    window.location.assign("/login"); // או "/" אם זה היעד שלך
+  }
 }
+
+export function isLoggedIn() {
+  return !!localStorage.getItem("token");
+}
+
+export function currentUser<T = any>(): T | null {
+  const raw = localStorage.getItem("userLogin");
+  return raw ? JSON.parse(raw) as T : null;
+}
+
