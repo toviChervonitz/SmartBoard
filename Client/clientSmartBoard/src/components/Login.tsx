@@ -27,10 +27,10 @@ export default function Login() {
 
       // שמירת טוקן ומשתמש בלוקל סטורג'
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('userLogin', JSON.stringify(data.user));
 
       alert(`ברוך הבא ${data.user.name}`);
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     } catch (error) {
       console.error(error);
       alert('שגיאה בהתחברות');
