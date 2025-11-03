@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import type { PostCardProps } from "../models/Post";
 import type { Post } from "../models/Post";
 
-interface LikeButtonProps {
-    post: Post;
-}
-
-export default function LikeButton({ post }: LikeButtonProps) {
-    // מוסיפים liked פנימי אם לא קיים
+export default function LikeButton({ post, isLoggedIn, fromPersonalArea, onDelete }: PostCardProps) {
     const [currentPost, setCurrentPost] = useState<Post & { liked?: boolean }>({
         ...post,
         liked: false,
@@ -25,14 +21,12 @@ export default function LikeButton({ post }: LikeButtonProps) {
         }
 
         const oldPost = currentPost;
-
         const updatedPost = {
             ...currentPost,
-            liked: !currentPost.liked, // הפוך את הלייק
-            likes: (currentPost.likes ?? 0) + (currentPost.liked ? -1 : 1), // עדכון הלייקים לפי מצב הלייק הקודם
+            liked: !currentPost.liked,
+            likes: (currentPost.likes ?? 0) + (currentPost.liked ? -1 : 1),
         };
 
-        // עדכון מיידי במסך
         setCurrentPost(updatedPost);
         setLoading(true);
 
@@ -44,19 +38,16 @@ export default function LikeButton({ post }: LikeButtonProps) {
             });
 
             if (!response.ok) throw new Error("Failed to update post");
-
-            // אפשר להחזיר מהשרת ולעדכן state לפי data
-            // const data = await response.json();
-            // setCurrentPost(data);
-
         } catch (err) {
             console.error("Post update failed:", err);
-            // rollback במקרה של שגיאה
             setCurrentPost(oldPost);
         } finally {
             setLoading(false);
         }
     };
+
+    // 👇 אם המשתמש לא מחובר – לא מציגים בכלל את הכפתור
+    if (!isLoggedIn) return null;
 
     return (
         <div style={{ display: "flex", flexDirection: "column-reverse", alignItems: "center", gap: 8 }}>
