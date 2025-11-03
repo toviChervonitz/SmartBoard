@@ -13,9 +13,9 @@ const App: React.FC = () => {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<PublicPosts />} />
+        <Route path="/publicPosts" element={<PublicPosts />} />
         <Route path="/myPost" element={<MyPosts />} />
         <Route path="/addPost" element={<EditOrAddPost />} />
       </Routes>

@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './css/auth.css';
 
@@ -16,6 +17,8 @@ export default function Register() {
     phone: '',
     password: '',
   });
+
+  const navigate = useNavigate(); // <-- כאן
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,7 +42,9 @@ export default function Register() {
       localStorage.setItem('userLogin', JSON.stringify(loginRes.data.user));
 
       alert(`נרשמת בהצלחה! ברוך הבא ${loginRes.data.user.name}`);
-      window.location.href = '/';
+
+      // ניווט ל-publicPosts
+      navigate('/publicPosts');
     } catch (error) {
       console.error(error);
       alert('שגיאה בהרשמה. ייתכן שהאימייל כבר רשום.');
@@ -86,37 +91,8 @@ export default function Register() {
       />
       <button type="submit" className="button">הרשם</button>
       <p>
-        כבר רשום? <a href="/login">התחבר כאן</a>
+        כבר רשום? <Link to="/login">התחבר כאן</Link>
       </p>
     </form>
   );
 }
-
-// // ✨ עיצוב בסיסי
-// const styles: Record<string, React.CSSProperties> = {
-//   form: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     width: '300px',
-//     margin: '100px auto',
-//     padding: '20px',
-//     border: '1px solid #ccc',
-//     borderRadius: '10px',
-//     textAlign: 'center',
-//   },
-//   input: {
-//     margin: '8px 0',
-//     padding: '10px',
-//     borderRadius: '5px',
-//     border: '1px solid #aaa',
-//   },
-//   button: {
-//     marginTop: '10px',
-//     padding: '10px',
-//     backgroundColor: '#4CAF50',
-//     color: 'white',
-//     border: 'none',
-//     borderRadius: '5px',
-//     cursor: 'pointer',
-//   },
-// };

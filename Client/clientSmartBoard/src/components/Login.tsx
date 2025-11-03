@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // <-- ייבוא קישור
 import './css/auth.css';
 
 interface User {
@@ -16,6 +16,7 @@ interface LoginResponse {
 export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate(); // <-- כאן
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,7 +31,9 @@ export default function Login() {
       localStorage.setItem('userLogin', JSON.stringify(data.user));
 
       alert(`ברוך הבא ${data.user.name}`);
-      window.location.href = '/';
+      
+      // ניווט ל-publicPosts במקום window.location.href
+      navigate('/publicPosts');
     } catch (error) {
       console.error(error);
       alert('שגיאה בהתחברות');
@@ -61,7 +64,6 @@ export default function Login() {
       />
       <button type="submit" className="button">התחבר</button>
 
-      
       <p style={{ marginTop: '10px', textAlign: 'center' }}>
         אין לך חשבון?{' '}
         <Link to="/register" style={{ color: '#4CAF50', textDecoration: 'none' }}>
