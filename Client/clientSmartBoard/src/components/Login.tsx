@@ -32,7 +32,7 @@ export default function Login() {
 
       alert(`ברוך הבא ${data.user.name}`);
       
-      navigate('/publicPosts');
+      navigate('/');
     } catch (error) {
       console.error(error);
       alert('שגיאה בהתחברות');

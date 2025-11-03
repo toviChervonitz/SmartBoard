@@ -43,8 +43,7 @@ export default function Register() {
 
       alert(`נרשמת בהצלחה! ברוך הבא ${loginRes.data.user.name}`);
 
-      // ניווט ל-publicPosts
-      navigate('/publicPosts');
+      navigate('/');
     } catch (error) {
       console.error(error);
       alert('שגיאה בהרשמה. ייתכן שהאימייל כבר רשום.');
