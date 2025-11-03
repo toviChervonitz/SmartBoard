@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-main().catch(err => console.log("Mongo error:", err));
 
-async function main() {
+async function connectMongo() {
   try {
     await mongoose.connect(process.env.MONGO_URL);
     console.log("Mongo connected successfully");
@@ -9,3 +8,5 @@ async function main() {
     console.error(" Mongo connection failed:", err.message);
   }
 }
+
+module.exports = { connectMongo };
