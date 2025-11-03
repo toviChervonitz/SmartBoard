@@ -21,13 +21,13 @@ export default function Navbar() {
 
         {/* קישורים */}
         <div>
-          <Button color="inherit" component={Link} to="/">
+          <Button color="inherit" component={Link} to="/publicPosts">
             כל ההודעות
           </Button>
 
           {isLoggedIn && (
             <>
-              <Button color="inherit" component={Link} to="/my-posts">
+              <Button color="inherit" component={Link} to="/myPosts">
                 ההודעות שלי
               </Button>
               <Button color="inherit" component={Link} to="/my-favorites">
