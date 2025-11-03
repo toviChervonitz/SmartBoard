@@ -1,12 +1,12 @@
 import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
 import type { PostCardProps } from "../models/Post";
+import LikeButton from './LikeButton';
 import { deletePost } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete }: PostCardProps) {
 
   const navigate = useNavigate();
-//jhfvcbdxnm
   const handleDelete = async () => {
     if (window.confirm("האם את בטוחה שברצונך למחוק את המודעה?")) {
       try {
@@ -21,7 +21,6 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
   };
 
   return (
-    //hjbvfjncmds,x
     <Card sx={{ mb: 2, p: 2 }}>
       <CardContent>
         <Typography variant="h6">{post.title}</Typography>
@@ -39,6 +38,7 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
             התחבר כדי ליצור קשר
           </Button>
         )}
+        <LikeButton post={post}></LikeButton>
 
         {fromPersonalArea && (
           <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
@@ -52,11 +52,10 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
           </Stack>
         )}
 
-        <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+        {/* <Typography variant="caption" display="block" sx={{ mt: 1 }}>
           ❤️ {post.likes || 0} לייקים
-        </Typography>
+        </Typography> */}
       </CardContent>
     </Card>
-    //hbfjnemds
   );
 }
