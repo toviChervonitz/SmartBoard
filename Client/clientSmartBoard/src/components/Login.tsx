@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';

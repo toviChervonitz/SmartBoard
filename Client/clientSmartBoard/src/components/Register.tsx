@@ -2,11 +2,6 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './css/auth.css';
-import { useState } from "react";
-import type { ChangeEvent } from "react"; import type { FormEvent } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import "./css/auth.css";
 import {
   Container,
   Paper,
