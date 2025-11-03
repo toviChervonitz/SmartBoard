@@ -41,33 +41,134 @@ export default function Login() {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   return (
-    <form onSubmit={handleLogin} className="auth-form">
-      <h2>התחברות</h2>
-      <input
-        type="email"
-        placeholder="אימייל"
-        value={email}
-        onChange={handleEmailChange}
-        required
-        className="input"
-      />
-      <input
-        type="password"
-        placeholder="סיסמה"
-        value={password}
-        onChange={handlePasswordChange}
-        required
-        className="input"
-      />
-      <button type="submit" className="button">התחבר</button>
+       <Container maxWidth="xs">
+      <Box
+        sx={{
+          mt: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            borderRadius: 2,
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'primary.main', width: 56, height: 56 }}>
+            <LoginIcon fontSize="large" />
+          </Avatar>
 
-      
-      <p style={{ marginTop: '10px', textAlign: 'center' }}>
-        אין לך חשבון?{' '}
-        <Link to="/register" style={{ color: '#4CAF50', textDecoration: 'none' }}>
-          הרשם כאן
-        </Link>
-      </p>
-    </form>
+          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+            התחברות
+          </Typography>
+
+          {error && (
+            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <Box component="form" onSubmit={handleLogin} sx={{ width: '100%' }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="אימייל"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="סיסמה"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon color="action" />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loading}
+              sx={{
+                mt: 3,
+                mb: 2,
+                height: 48,
+                borderRadius: 2,
+                fontSize: '1.1rem',
+              }}
+            >
+              {loading ? 'מתחבר...' : 'התחברות'}
+            </Button>
+
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                אין לך חשבון?{' '}
+                <Link
+                  to="/register"
+                  style={{
+                    color: 'inherit',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  הרשם כאן
+                </Link>
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+
+      <Snackbar
+        open={Boolean(error)}
+        autoHideDuration={6000}
+        onClose={() => setError(null)}
+      >
+        <Alert severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
+    </Container>
   );
 }
