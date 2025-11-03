@@ -1,8 +1,7 @@
 // app.js
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config(); // חייב להיות ראשון
-import authRoutes from './routes/authRoutes.js';
-
+const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');

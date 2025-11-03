@@ -1,10 +1,8 @@
-// controllers/auth.js
-import User from '../models/User.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
+const User=require('../models/User');
+const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
 // ==================== REGISTER ====================
-export const register = async (req, res) => {
+ exports.register = async (req, res) => {
     try {
     const { name, email, phone, password } = req.body;
 
@@ -29,7 +27,7 @@ export const register = async (req, res) => {
 };
 
 // ==================== LOGIN ====================
-export const login = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log('Login attempt for email:', email);
