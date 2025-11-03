@@ -5,6 +5,7 @@ import { getFromLocalStorage } from "../services/localstorage";
 import { getPosts } from "../services/api";
 
 export default function PublicPosts() {
+    //trybvfjh
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -14,10 +15,12 @@ export default function PublicPosts() {
             .catch((err) => console.error(err))
             .finally(() => setLoading(false));
     }, []);
+    //trybvfjh
 
     if (loading) return <CircularProgress />;
     const user = getFromLocalStorage<string>('userLogin');
     const isLoggedIn = user ? true : false;
+    //trybvfjh
 
     return (
         <Container sx={{ mt: 4 }}>
