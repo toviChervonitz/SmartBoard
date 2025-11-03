@@ -1,22 +1,34 @@
 import { useEffect, useState } from "react";
-import { Container, Typography, CircularProgress } from "@mui/material";
+import {
+    Container, Typography,
+    Grid as MuiGrid, Paper, Alert, Fab, Box,
+    Skeleton
+} from "@mui/material";
+import { Add as AddIcon } from '@mui/icons-material';
 import PostCard from "../components/PostCard";
 import { getPostById } from "../services/api";
 import type { Post } from "../models/Post";
-import { getFromLocalStorage } from '../services/localstorage'
+import { getFromLocalStorage } from '../services/localstorage';
+import { useNavigate } from "react-router-dom";
+
+interface User {
+    _id: string;
+    name: string;
+}
 
 export default function MyPosts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const user = getFromLocalStorage<any>('userLogin');
-    console.log("user:", user);
-    const userId = user?.id || null;
+    const navigate = useNavigate();
+    
+    const user = getFromLocalStorage<User>('userLogin');
+    const userId = user ? user._id : null;
     console.log(userId + "userId");
 
 
     const handleDelete = (id: string) => {
-        setPosts((prev) => prev.filter((p) => p._id !== id)); // ✅ מסיר מהמסך בלי רענון
+        setPosts((prev) => prev.filter((p) => p._id !== id));
     };
 
     useEffect(() => {
@@ -25,14 +37,16 @@ export default function MyPosts() {
             setLoading(false);
             return;
         }
+        
         const fetchPosts = async () => {
             try {
                 const data = await getPostById(userId);
                 console.log("data" + data);
                 setPosts(data);
-            } catch (err:any) {
+            } catch (err) {
+                const error = err as { response?: { status: number } };
                 console.error("❌ שגיאה בקבלת פוסטים:", err);
-                if (err.response && err.response.status === 404) {
+                if (error.response?.status === 404) {
                     setPosts([]);
                 } else {
                     setError("לא ניתן לטעון את המודעות מהשרת.");
@@ -43,35 +57,91 @@ export default function MyPosts() {
         };
 
         fetchPosts();
-    }, []);
+    }, [userId]);
 
-    if (loading)
+    if (loading) {
         return (
-            <Container sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-                <CircularProgress />
-            </Container>
-        );
-
-    if (error)
-        return (
-            <Container sx={{ mt: 4 }}>
-                <Typography color="error" variant="body1">
-                    {error}
+            <Container maxWidth="lg" sx={{ mt: 4 }}>
+                <Typography variant="h4" gutterBottom>
+                    המודעות שלי
                 </Typography>
+                <MuiGrid container spacing={3}>
+                    {[1, 2, 3].map((n) => (
+                        <MuiGrid item xs={12} key={n}>
+                            <Paper sx={{ p: 3 }}>
+                                <Skeleton variant="text" width="60%" height={40} />
+                                <Skeleton variant="text" width="40%" />
+                                <Skeleton variant="rectangular" height={100} sx={{ my: 2 }} />
+                                <Skeleton variant="text" width="20%" />
+                            </Paper>
+                        </MuiGrid>
+                    ))}
+                </MuiGrid>
             </Container>
         );
+    }
+
+    if (error) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 4 }}>
+                <Alert severity="error" variant="filled" sx={{ mb: 3 }}>
+                    {error}
+                </Alert>
+            </Container>
+        );
+    }
 
     return (
-        <Container sx={{ mt: 4 }}>
-            <Typography variant="h4" gutterBottom>
-                המודעות שלי
-            </Typography>
+        <Container maxWidth="lg" sx={{ mt: 4, position: 'relative', minHeight: '80vh' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+                <Typography variant="h4" component="h1">
+                    המודעות שלי
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                    {posts.length} מודעות
+                </Typography>
+            </Box>
+
             {posts.length > 0 ? (
-                posts.map((p) => <PostCard key={p._id} post={p} isLoggedIn={true} fromPersonalArea={true} onDelete={handleDelete} />)
+                <MuiGrid container spacing={3}>
+                    {posts.map((post) => (
+                        <MuiGrid item xs={12} key={post._id}>
+                            <PostCard
+                                post={post}
+                                isLoggedIn={true}
+                                fromPersonalArea={true}
+                                onDelete={handleDelete}
+                            />
+                        </MuiGrid>
+                    ))}
+                </MuiGrid>
             ) : (
-                <Typography color="text.secondary">אין לך כרגע מודעות באזור האישי</Typography>
-            )
-            }
-        </Container >
+                <Paper sx={{ 
+                    p: 4, 
+                    textAlign: 'center',
+                    backgroundColor: 'background.default'
+                }}>
+                    <Typography color="text.secondary" paragraph>
+                        אין לך כרגע מודעות באזור האישי
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" paragraph>
+                        לחץ על כפתור ה+ למטה כדי ליצור מודעה חדשה
+                    </Typography>
+                </Paper>
+            )}
+
+            <Fab
+                color="primary"
+                aria-label="add"
+                sx={{
+                    position: 'fixed',
+                    bottom: 24,
+                    right: 24,
+                }}
+                onClick={() => navigate('/add-post')}
+            >
+                <AddIcon />
+            </Fab>
+        </Container>
     );
 }

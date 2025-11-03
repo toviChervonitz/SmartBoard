@@ -1,6 +1,6 @@
-// app.js
+
 import dotenv from 'dotenv';
-dotenv.config(); // חייב להיות ראשון
+dotenv.config(); 
 
 import express from 'express';
 import { connectMongo } from './db/mongoConnection.js';
