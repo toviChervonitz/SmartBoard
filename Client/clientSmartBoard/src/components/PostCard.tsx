@@ -1,8 +1,7 @@
-import { Card, CardContent, Typography, Button } from "@mui/material";
+import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
 import type { PostCardProps } from "../models/Post";
 import LikeButton from './LikeButton';
 
-export default function PostCard({ post, isLoggedIn }: PostCardProps) {
   return (
     <Card sx={{ mb: 2, p: 2 }}>
       <CardContent>
