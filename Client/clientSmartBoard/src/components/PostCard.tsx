@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete }: PostCardProps) {
 
   const navigate = useNavigate();
-
+//jhfvcbdxnm
   const handleDelete = async () => {
     if (window.confirm("האם את בטוחה שברצונך למחוק את המודעה?")) {
       try {
@@ -21,6 +21,7 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
   };
 
   return (
+    //hjbvfjncmds,x
     <Card sx={{ mb: 2, p: 2 }}>
       <CardContent>
         <Typography variant="h6">{post.title}</Typography>
@@ -56,5 +57,6 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
         </Typography>
       </CardContent>
     </Card>
+    //hbfjnemds
   );
 }
