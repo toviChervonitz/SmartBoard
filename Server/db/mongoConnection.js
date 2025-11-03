@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-export async function connectMongo() {
+async function connectMongo() {
   try {
     await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
@@ -11,3 +11,5 @@ export async function connectMongo() {
     console.error("Mongo connection failed:", err.message);
   }
 }
+
+module.exports = { connectMongo };
