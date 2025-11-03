@@ -15,8 +15,8 @@ export default function Navbar() {
 
   const handleLogout = () => {
     // ניקוי מלא של ה־localStorage
-    localStorage.removeItem("token");
-    localStorage.removeItem("userLogin");
+    localStorage.clear();
+    // localStorage.removeItem("userLogin");
     setIsLoggedIn(false);
 
     // מעבר אוטומטי לעמוד הראשי
