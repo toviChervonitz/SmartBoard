@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import type { FormEvent } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // <-- ייבוא קישור
 import './css/auth.css';
 import {
   Container,
@@ -37,6 +37,7 @@ interface LoginResponse {
 export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate(); // <-- כאן
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -55,6 +56,10 @@ export default function Login() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userLogin', JSON.stringify(data.user));
 
+      alert(`ברוך הבא ${data.user.name}`);
+      
+      // ניווט ל-publicPosts במקום window.location.href
+      navigate('/publicPosts');
       window.location.href = '/';
     } catch (error) {
       console.error(error);
@@ -128,6 +133,13 @@ export default function Login() {
                 }}
               />
 
+      <p style={{ marginTop: '10px', textAlign: 'center' }}>
+        אין לך חשבון?{' '}
+        <Link to="/register" style={{ color: '#4CAF50', textDecoration: 'none' }}>
+          הרשם כאן
+        </Link>
+      </p>
+    </form>
               <TextField
                 margin="normal"
                 required

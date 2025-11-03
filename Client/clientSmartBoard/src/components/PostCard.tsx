@@ -38,7 +38,7 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
             התחבר כדי ליצור קשר
           </Button>
         )}
-        <LikeButton post={post}></LikeButton>
+        <LikeButton post={post} isLoggedIn={isLoggedIn}></LikeButton>
 
         {fromPersonalArea && (
           <Stack direction="row" spacing={1} sx={{ mt: 2 }}>

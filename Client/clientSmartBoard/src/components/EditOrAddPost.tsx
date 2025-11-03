@@ -68,7 +68,7 @@ export default function EditOrAddPost() {
                 await createPost(dataToSend);
                 alert("✅ הפוסט נוסף בהצלחה!");
             }
-            navigate("/myPost");
+            navigate("/myPosts");
         } catch (err) {
             console.error("❌ שגיאה:", err);
             alert("אירעה שגיאה במהלך השמירה.");
