@@ -27,7 +27,7 @@ export default function Navbar() {
 
           {isLoggedIn && (
             <>
-              <Button color="inherit" component={Link} to="/my-posts">
+              <Button color="inherit" component={Link} to="/myPosts">
                 ההודעות שלי
               </Button>
               <Button color="inherit" component={Link} to="/add-post">
