@@ -2,15 +2,19 @@ import axios from "axios";
 import type { Post } from "../models/Post";
 
 const API = axios.create({
-  baseURL: "http://localhost:3000/api", 
+  baseURL: "http://localhost:3000/api", // ה-API של השרת
 });
 
-export const getPosts = async (): Promise<Post[]> => {
-  const res = await API.get("/posts");
+// services/api.ts
+export async function getPosts(q?: string) {
+  const params = q?.trim() ? { q: q.trim() } : undefined;
+  const res = await API.get("/posts", { params });   // ← לא לבנות URL ידנית
   return res.data;
-};
+}
 
-export const getPostById = async (postId: string): Promise<Post[]> => {
+
+
+export const getPostById = async (postId: string): Promise<Post> => {
   const res = await API.get(`/posts/${postId}`);
   return res.data;
 };
