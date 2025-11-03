@@ -1,13 +1,10 @@
+// app.js
+const express = require('express');
+require('dotenv').config();
+const cors = require('cors');
+const postsRouter = require('./routes/postRoutes');
+const authRoutes = require('./routes/authRoutes');
 
-import dotenv from 'dotenv';
-dotenv.config(); 
-
-import express from 'express';
-import { connectMongo } from './db/mongoConnection.js';
-import cors from 'cors';
-import authRoutes from './routes/authRoutes.js';
-
-const PORT = process.env.PORT || 3000;
 const HOST_NAME = process.env.HOST_NAME || '127.0.0.1';
 const PORT = process.env.PORT || 3000;
 const app = express({ mergeParams: true });

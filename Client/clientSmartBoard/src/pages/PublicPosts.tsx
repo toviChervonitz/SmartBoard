@@ -1,134 +1,155 @@
 import { useEffect, useState } from "react";
 import {
-    Container, Typography,
-    Grid as MuiGrid, Paper, Alert, Box, Skeleton,
-    TextField, InputAdornment
+  Container,
+  Typography,
+  Paper,
+  Alert,
+  Box,
+  Skeleton,
 } from "@mui/material";
-import { Search as SearchIcon } from '@mui/icons-material';
+import { Grid } from '@mui/material';
 import PostCard from "../components/PostCard";
 import { getFromLocalStorage } from "../services/localstorage";
 import { getPosts } from "../services/api";
 import type { Post } from "../models/Post";
 
 export default function PublicPosts() {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        getPosts()
-            .then((data) => {
-                setPosts(data);
-                setFilteredPosts(data);
-            })
-            .catch((err) => {
-                console.error(err);
-                setError("לא ניתן לטעון את המודעות כרגע. נסו שוב מאוחר יותר.");
-            })
-            .finally(() => setLoading(false));
-    }, []);
+  useEffect(() => {
+    getPosts()
+      .then((data) => {
+        setPosts(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError("לא ניתן לטעון את המודעות כרגע. נסו שוב מאוחר יותר.");
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
-    useEffect(() => {
-        const filtered = posts.filter(post =>
-            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.location.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredPosts(filtered);
-    }, [searchTerm, posts]);
+  const user = getFromLocalStorage<string>("userLogin");
+  const isLoggedIn = Boolean(user);
 
-    const user = getFromLocalStorage<string>('userLogin');
-    const isLoggedIn = Boolean(user);
-
-    if (loading) {
-        return (
-            <Container maxWidth="lg" sx={{ mt: 4 }}>
-                <Box sx={{ mb: 4 }}>
-                    <Skeleton variant="text" width="30%" height={60} />
-                    <Skeleton variant="rectangular" height={56} sx={{ mt: 2 }} />
-                </Box>
-                <MuiGrid container spacing={3}>
-                    {[1, 2, 3, 4].map((n) => (
-                        <MuiGrid item xs={12} md={6} key={n}>
-                            <Paper sx={{ p: 3 }}>
-                                <Skeleton variant="text" width="60%" height={40} />
-                                <Skeleton variant="text" width="40%" />
-                                <Skeleton variant="rectangular" height={100} sx={{ my: 2 }} />
-                                <Skeleton variant="text" width="20%" />
-                            </Paper>
-                        </MuiGrid>
-                    ))}
-                </MuiGrid>
-            </Container>
-        );
-    }
-
-    if (error) {
-        return (
-            <Container maxWidth="lg" sx={{ mt: 4 }}>
-                <Alert severity="error" variant="filled">
-                    {error}
-                </Alert>
-            </Container>
-        );
-    }
-
+  if (loading) {
     return (
-        <Container maxWidth="lg" sx={{ mt: 4 }}>
-            <Box sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column', sm: 'row' },
-                justifyContent: 'space-between',
-                alignItems: { xs: 'stretch', sm: 'center' },
-                mb: 4,
-                gap: 2
-            }}>
-                <Typography variant="h4" component="h1">
-                    כל המודעות
-                </Typography>
-                <TextField
-                    placeholder="חיפוש מודעות..."
-                    variant="outlined"
-                    size="small"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    sx={{ maxWidth: { sm: 300 } }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Box sx={{ 
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          mb: 4 
+        }}>
+          <Skeleton variant="text" width="200px" height={60} />
+          <Box sx={{ width: '100%', maxWidth: '600px', mt: 2 }}>
+            <Skeleton variant="rectangular" width="100%" height={56} />
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ maxWidth: "1200px", width: "100%" }}>
+            <Grid container spacing={3}>
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <Grid item xs={12} sm={6} md={4} key={n}>
+                  <Paper 
+                    sx={{ 
+                      p: 3,
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column'
                     }}
-                />
-            </Box>
-
-            {filteredPosts.length > 0 ? (
-                <MuiGrid container spacing={3}>
-                    {filteredPosts.map((post) => (
-                        <MuiGrid item xs={12} md={6} key={post._id}>
-                            <PostCard
-                                post={post}
-                                isLoggedIn={isLoggedIn}
-                            />
-                        </MuiGrid>
-                    ))}
-                </MuiGrid>
-            ) : (
-                <Paper sx={{
-                    p: 4,
-                    textAlign: 'center',
-                    backgroundColor: 'background.default'
-                }}>
-                    <Typography color="text.secondary">
-                        {searchTerm
-                            ? "לא נמצאו מודעות התואמות את החיפוש שלך"
-                            : "אין מודעות להצגה כרגע"}
-                    </Typography>
-                </Paper>
-            )}
-        </Container>
+                  >
+                    <Skeleton variant="text" width="60%" height={40} />
+                    <Skeleton variant="text" width="40%" />
+                    <Skeleton variant="rectangular" height={120} sx={{ my: 2 }} />
+                    <Skeleton variant="text" width="20%" />
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
     );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Alert severity="error" variant="filled">
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
+
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 6 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mb: 6,
+        }}
+      >
+        <Typography
+          variant="h3"
+          component="h1"
+          sx={{
+            mb: 4,
+            fontWeight: "bold",
+            textAlign: "center",
+            color: "primary.main"
+          }}
+        >
+          כל המודעות
+        </Typography>
+        
+      </Box>
+
+      {posts.length > 0 ? (
+        <Box sx={{ maxWidth: "1200px", mx: "auto" }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(3, 1fr)'
+              },
+              gap: 3
+            }}
+          >
+            {posts.map((post: Post) => (
+              <Box key={post._id} sx={{ height: '100%' }}>
+                <PostCard post={post} isLoggedIn={isLoggedIn} />
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      ) : (
+        <Paper
+          elevation={3}
+          sx={{
+            p: 6,
+            textAlign: "center",
+            maxWidth: "600px",
+            mx: "auto",
+            backgroundColor: "background.paper",
+            borderRadius: 2,
+          }}
+        >
+          <Typography 
+            variant="h6" 
+            color="text.secondary"
+            sx={{ fontWeight: "medium" }}
+          >
+            אין מודעות להצגה כרגע
+          </Typography>
+        </Paper>
+      )}
+    </Container>
+  );
 }

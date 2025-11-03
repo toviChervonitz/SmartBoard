@@ -54,7 +54,9 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
   return (
     <>
       <Card sx={{ 
-        mb: 2,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
         transition: 'transform 0.2s, box-shadow 0.2s',
         '&:hover': {
           transform: 'translateY(-2px)',
@@ -73,7 +75,7 @@ export default function PostCard({ post, isLoggedIn, fromPersonalArea, onDelete 
           }
         />
         <Divider />
-        <CardContent>
+        <CardContent sx={{ flexGrow: 1 }}>
           <Typography variant="body1" paragraph>
             {post.content}
           </Typography>

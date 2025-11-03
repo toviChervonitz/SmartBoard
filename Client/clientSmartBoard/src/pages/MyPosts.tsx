@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
     Container, Typography,
-    Grid as MuiGrid, Paper, Alert, Fab, Box,
+    Grid, Paper, Alert, Fab, Box,
     Skeleton
 } from "@mui/material";
 import { Add as AddIcon } from '@mui/icons-material';
@@ -23,7 +23,7 @@ export default function MyPosts() {
     const navigate = useNavigate();
     
     const user = getFromLocalStorage<User>('userLogin');
-    const userId = user ? user._id : null;
+    const userId = user?.id || null;
     console.log(userId + "userId");
 
 
@@ -43,10 +43,9 @@ export default function MyPosts() {
                 const data = await getPostById(userId);
                 console.log("data" + data);
                 setPosts(data);
-            } catch (err) {
-                const error = err as { response?: { status: number } };
+            } catch (err:any) {
                 console.error("❌ שגיאה בקבלת פוסטים:", err);
-                if (error.response?.status === 404) {
+                if (err.response?.status === 404) {
                     setPosts([]);
                 } else {
                     setError("לא ניתן לטעון את המודעות מהשרת.");
@@ -65,18 +64,18 @@ export default function MyPosts() {
                 <Typography variant="h4" gutterBottom>
                     המודעות שלי
                 </Typography>
-                <MuiGrid container spacing={3}>
+                <Grid container spacing={3}>
                     {[1, 2, 3].map((n) => (
-                        <MuiGrid item xs={12} key={n}>
+                        <Grid item xs={12} key={n}>
                             <Paper sx={{ p: 3 }}>
                                 <Skeleton variant="text" width="60%" height={40} />
                                 <Skeleton variant="text" width="40%" />
                                 <Skeleton variant="rectangular" height={100} sx={{ my: 2 }} />
                                 <Skeleton variant="text" width="20%" />
                             </Paper>
-                        </MuiGrid>
+                        </Grid>
                     ))}
-                </MuiGrid>
+                </Grid>
             </Container>
         );
     }
@@ -103,18 +102,18 @@ export default function MyPosts() {
             </Box>
 
             {posts.length > 0 ? (
-                <MuiGrid container spacing={3}>
+                <Grid container spacing={3}>
                     {posts.map((post) => (
-                        <MuiGrid item xs={12} key={post._id}>
+                        <Grid item xs={12} key={post._id}>
                             <PostCard
                                 post={post}
                                 isLoggedIn={true}
                                 fromPersonalArea={true}
                                 onDelete={handleDelete}
                             />
-                        </MuiGrid>
+                        </Grid>
                     ))}
-                </MuiGrid>
+                </Grid>
             ) : (
                 <Paper sx={{ 
                     p: 4, 
