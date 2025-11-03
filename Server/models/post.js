@@ -12,7 +12,5 @@ const postSchema = new mongoose.Schema({
     },
     likes: { type: Number, default: 0 },
 });
-postSchema.index({ title: 1 });
-postSchema.index({ location: 1 });  // חדש, לחיפוש לפי עיר
 
 module.exports = mongoose.model("Post", postSchema);
