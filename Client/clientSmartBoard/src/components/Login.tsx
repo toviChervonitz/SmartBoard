@@ -32,7 +32,6 @@ export default function Login() {
 
       alert(`ברוך הבא ${data.user.name}`);
       
-      // ניווט ל-publicPosts במקום window.location.href
       navigate('/publicPosts');
     } catch (error) {
       console.error(error);

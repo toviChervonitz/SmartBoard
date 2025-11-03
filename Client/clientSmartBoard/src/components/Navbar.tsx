@@ -21,7 +21,7 @@ export default function Navbar() {
 
         {/* קישורים */}
         <div>
-          <Button color="inherit" component={Link} to="/publicPosts">
+          <Button color="inherit" component={Link} to="/">
             כל ההודעות
           </Button>
 

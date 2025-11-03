@@ -1,5 +1,5 @@
 // services/auth.ts
-import jwtDecode from "jwt-decode";
+import * as jwtDecode from "jwt-decode"; // ✅ עבודה עם Vite/ESM
 
 export interface DecodedToken {
   id: string;
@@ -12,7 +12,7 @@ export function getUserFromToken(): DecodedToken | null {
   try {
     const token = localStorage.getItem("token");
     if (!token) return null;
-    const decoded: DecodedToken = jwtDecode(token);
+    const decoded: DecodedToken = (jwtDecode as any)(token);
     return decoded;
   } catch (error) {
     console.error("❌ שגיאה בפענוח ה-token:", error);
