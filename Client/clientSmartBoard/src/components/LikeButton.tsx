@@ -3,41 +3,54 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import type { PostCardProps } from "../models/Post";
-import type { Post } from "../models/Post";
+import type { favoritePost } from "../models/Post";
+import { getFromLocalStorage } from "../services/localstorage";
 
 export default function LikeButton({ post, isLoggedIn, fromPersonalArea, onDelete }: PostCardProps) {
-    const [currentPost, setCurrentPost] = useState<Post & { liked?: boolean }>({
-        ...post,
-        liked: false,
-    });
+    const user = getFromLocalStorage<any>("userLogin");
+    const userId = user?.id || null;
 
+    const favoritePostData: favoritePost = {
+        postId: post._id,
+        userId,
+        liked: false,
+        likes: post.likes || 0,
+    };
+
+    const [currentPost, setCurrentPost] = useState<favoritePost>(favoritePostData);
     const [loading, setLoading] = useState(false);
 
     const handleClick = async () => {
         if (loading) return;
-        if (!currentPost._id) {
+        if (!currentPost.postId) {
             console.error("Post ID is missing!");
             return;
         }
 
         const oldPost = currentPost;
+        const isLiking = !currentPost.liked; // true = מוסיף לייק, false = מוריד לייק
+
         const updatedPost = {
             ...currentPost,
-            liked: !currentPost.liked,
-            likes: (currentPost.likes ?? 0) + (currentPost.liked ? -1 : 1),
+            liked: isLiking,
+            likes: (currentPost.likes ?? 0) + (isLiking ? 1 : -1),
         };
 
         setCurrentPost(updatedPost);
         setLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:3000/api/posts/${currentPost._id}`, {
-                method: "PUT",
+            const url = isLiking
+                ? `http://localhost:3000/api/posts/addFavoritePost/${currentPost.postId}`
+                : `http://localhost:3000/api/posts/removeFavoritePost/${currentPost.postId}`;
+
+            const response = await fetch(url, {
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedPost),
             });
 
-            if (!response.ok) throw new Error("Failed to update post");
+            if (!response.ok) throw new Error("Failed to update like status");
         } catch (err) {
             console.error("Post update failed:", err);
             setCurrentPost(oldPost);
@@ -46,7 +59,6 @@ export default function LikeButton({ post, isLoggedIn, fromPersonalArea, onDelet
         }
     };
 
-    // 👇 אם המשתמש לא מחובר – לא מציגים בכלל את הכפתור
     if (!isLoggedIn) return null;
 
     return (
