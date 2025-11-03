@@ -27,6 +27,17 @@ exports.getAllPosts = async (req, res) => {
     }
 };
 
+exports.getPostsByUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const posts = await Post.find({ userId }).sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error("❌ Error fetching user posts:", error.message);
+        res.status(500).json({ message: "Error fetching user's posts" });
+    }
+};
+
 
 
 exports.getPostById = async (req, res) => {
@@ -43,11 +54,14 @@ exports.getPostById = async (req, res) => {
 };
 
 exports.createPost = async (req, res) => {
+    console.log("1234556789");
+    console.log("new post" + req.body);
     try {
         const newPost = new Post(req.body);
         const saved = await newPost.save();
         res.status(201).json(saved);
     } catch (err) {
+        console.error("❌ Error creating post:", err.message);
         res.status(400).json({ error: err.message });
     }
 };

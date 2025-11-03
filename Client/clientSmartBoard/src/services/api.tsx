@@ -24,6 +24,11 @@ export const createPost = async (postData: Post): Promise<Post> => {
   return res.data;
 };
 
+export const getPostsByUser = async (userId: string) => {
+  const res = await API.get(`/posts/user/${userId}`);
+  return res.data;
+};
+
 export const deletePost = async (postId: string): Promise<{ message: string }> => {
   const res = await API.delete(`/posts/${postId}`);
   return res.data;
