@@ -1,9 +1,6 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import './css/auth.css';
 import { useState } from "react";
-import type { ChangeEvent } from "react"; import type { FormEvent } from "react";
+import type { ChangeEvent } from "react";
+import type { FormEvent } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "./css/auth.css";
@@ -48,8 +45,6 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate(); // <-- כאן
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -76,16 +71,6 @@ export default function Register() {
       );
 
       // שמירת טוקן ומשתמש בלוקל סטורג'
-      localStorage.setItem('token', loginRes.data.token);
-      localStorage.setItem('userLogin', JSON.stringify(loginRes.data.user));
-
-      alert(`נרשמת בהצלחה! ברוך הבא ${loginRes.data.user.name}`);
-
-      // ניווט ל-publicPosts
-      navigate('/publicPosts');
-    } catch (error) {
-      console.error(error);
-      alert('שגיאה בהרשמה. ייתכן שהאימייל כבר רשום.');
       localStorage.setItem("token", loginRes.data.token);
       localStorage.setItem("userLogin", JSON.stringify(loginRes.data.user));
 
@@ -99,50 +84,6 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleRegister} className="auth-form">
-      <h2>הרשמה</h2>
-      <input
-        type="text"
-        name="name"
-        placeholder="שם מלא"
-        value={form.name}
-        onChange={handleChange}
-        required
-        className="input"
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="אימייל"
-        value={form.email}
-        onChange={handleChange}
-        required
-        className="input"
-      />
-      <input
-        type="tel"
-        name="phone"
-        placeholder="טלפון (לא חובה)"
-        value={form.phone}
-        onChange={handleChange}
-        className="input"
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="סיסמה"
-        value={form.password}
-        onChange={handleChange}
-        required
-        className="input"
-      />
-      <button type="submit" className="button">הרשם</button>
-      <p>
-        כבר רשום? <Link to="/login">התחבר כאן</Link>
-      </p>
-    </form>
-  );
-}
     <Box
       sx={{
         minHeight: '70vh',
@@ -161,172 +102,172 @@ export default function Register() {
             alignItems: "center",
           }}
         >
-          <Paper
-            elevation={3}
-            sx={{
-              p: 4,
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              borderRadius: 2,
-            }}
-          >
-            <Avatar
-              sx={{ m: 1, bgcolor: "secondary.main", width: 56, height: 56 }}
-            >
-              <PersonAddIcon fontSize="large" />
-            </Avatar>
-
-            <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-              הרשמה
-            </Typography>
-
-            {error && (
-              <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
-                {error}
-              </Alert>
-            )}
-
-            <Box
-              component="form"
-              onSubmit={handleRegister}
-              sx={{ width: "100%" }}
-            >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="שם מלא"
-                name="name"
-                autoComplete="name"
-                autoFocus
-                value={form.name}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="אימייל"
-                name="email"
-                autoComplete="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <TextField
-                margin="normal"
-                fullWidth
-                label="טלפון"
-                name="phone"
-                type="tel"
-                value={form.phone}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PhoneIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="סיסמה"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                value={form.password}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                disabled={loading}
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  height: 48,
-                  borderRadius: 2,
-                  fontSize: "1.1rem",
-                }}
-              >
-                {loading ? "מבצע הרשמה..." : "הרשמה"}
-              </Button>
-
-              <Box sx={{ textAlign: "center", mt: 2 }}>
-                <Typography variant="body2" color="text.secondary">
-                  כבר יש לך חשבון?{" "}
-                  <Link
-                    to="/login"
-                    style={{
-                      color: "inherit",
-                      textDecoration: "none",
-                      fontWeight: 600,
-                    }}
-                  >
-                    התחבר כאן
-                  </Link>
-                </Typography>
-              </Box>
-            </Box>
-          </Paper>
-        </Box>
-
-        <Snackbar
-          open={Boolean(error)}
-          autoHideDuration={6000}
-          onClose={() => setError(null)}
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            borderRadius: 2,
+          }}
         >
-          <Alert severity="error" sx={{ width: "100%" }}>
-            {error}
-          </Alert>
-        </Snackbar>
-      </Container>
+          <Avatar
+            sx={{ m: 1, bgcolor: "secondary.main", width: 56, height: 56 }}
+          >
+            <PersonAddIcon fontSize="large" />
+          </Avatar>
+
+          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+            הרשמה
+          </Typography>
+
+          {error && (
+            <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <Box
+            component="form"
+            onSubmit={handleRegister}
+            sx={{ width: "100%" }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="שם מלא"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              value={form.name}
+              onChange={handleChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="אימייל"
+              name="email"
+              autoComplete="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <TextField
+              margin="normal"
+              fullWidth
+              label="טלפון"
+              name="phone"
+              type="tel"
+              value={form.phone}
+              onChange={handleChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PhoneIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="סיסמה"
+              type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
+              value={form.password}
+              onChange={handleChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon color="action" />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loading}
+              sx={{
+                mt: 3,
+                mb: 2,
+                height: 48,
+                borderRadius: 2,
+                fontSize: "1.1rem",
+              }}
+            >
+              {loading ? "מבצע הרשמה..." : "הרשמה"}
+            </Button>
+
+            <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                כבר יש לך חשבון?{" "}
+                <Link
+                  to="/login"
+                  style={{
+                    color: "inherit",
+                    textDecoration: "none",
+                    fontWeight: 600,
+                  }}
+                >
+                  התחבר כאן
+                </Link>
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+
+      <Snackbar
+        open={Boolean(error)}
+        autoHideDuration={6000}
+        onClose={() => setError(null)}
+      >
+        <Alert severity="error" sx={{ width: "100%" }}>
+          {error}
+        </Alert>
+      </Snackbar>
+    </Container>
     </Box>
   );
 }

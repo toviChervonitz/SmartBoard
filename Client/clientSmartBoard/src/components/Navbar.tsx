@@ -33,20 +33,13 @@ export default function Navbar() {
 
         {/* קישורים */}
         <div>
-          <Button color="inherit" component={Link} to="/publicPosts">
+          <Button color="inherit" component={Link} to="/">
             כל ההודעות
           </Button>
 
           {isLoggedIn && (
             <>
               <Button color="inherit" component={Link} to="/myPosts">
-                ההודעות שלי
-              </Button>
-              <Button color="inherit" component={Link} to="/my-favorites">
-                מודעות שאהבתי
-              </Button>
-              <Button color="inherit" component={Link} to="/add-post">
-              <Button color="inherit" component={Link} to="/myPost">
                 ההודעות שלי
               </Button>
               <Button color="inherit" component={Link} to="/addPost">
@@ -59,13 +52,6 @@ export default function Navbar() {
         {/* התחברות / התנתקות */}
         <div>
           {isLoggedIn ? (
-            <Button
-              color="inherit"
-              onClick={() => {
-                localStorage.clear();
-                window.location.reload();
-              }}
-            >
             <Button color="inherit" onClick={handleLogout}>
               התנתקות
             </Button>
