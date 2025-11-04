@@ -15,10 +15,10 @@ const App: React.FC = () => {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<PublicPosts />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/publicPosts" element={<PublicPosts />} />
-        <Route path="/myPosts" element={<MyPosts />} />
+        <Route path="/" element={<PublicPosts />} />
+        <Route path="/myPost" element={<MyPosts />} />
         <Route path="/addPost" element={<EditOrAddPost />} />
         <Route path="/my-favorites" element={<FavoritePosts />} />
         <Route path="/login" element={<Login />} />
